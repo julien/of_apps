@@ -6,12 +6,11 @@
 
 class ofApp : public ofBaseApp {
 
-public:
-
-  Target* target;
+  vector<Target*>  targets;
   vector<Vehicle*> vehicles;
-  int numVehicles;
+  int maxEntities;
 
+public:
   void setup();
   void update();
   void draw();

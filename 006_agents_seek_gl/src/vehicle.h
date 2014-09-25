@@ -8,17 +8,26 @@ class Vehicle {
   float maxspeed;
   float maxforce;
   float size;
-
   ofPath path;
 
+  float age;
+  float maxAge;
+  bool alive;
+
 public:
+
   Vehicle(float x, float y) {
+
     location.set(x, y);
     acceleration.set(0, 0);
     velocity.set(0, ofRandom(-2, -4));
     maxspeed = ofRandom(2, 4);
     maxforce = ofRandom(0.01, 0.1);
-    size = ofRandom(4, 10);
+    size = ofRandom(1, 5);
+
+    age = ofGetElapsedTimef();
+    maxAge = ofRandom(2, 6);
+    alive = true;
 
     path.moveTo(ofPoint(0, -size));
     path.lineTo(ofPoint(-size, size));
@@ -32,6 +41,11 @@ public:
 
     location += velocity;
     acceleration *= 0;
+
+    float time = ofGetElapsedTimef();
+    if (time - age > maxAge) {
+      alive = false;
+    }
   }
 
   void applyForce(const ofVec2f &force) {
@@ -64,5 +78,9 @@ public:
     path.draw();
 
     ofPopMatrix();
+  }
+
+  bool isDead() {
+    return !alive;
   }
 };
