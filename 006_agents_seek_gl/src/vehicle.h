@@ -9,8 +9,7 @@ class Vehicle {
   float maxforce;
   float size;
 
-  vector<ofPoint> vertices;
-  ofPolyline line;
+  ofPath path;
 
 public:
   Vehicle(float x, float y) {
@@ -21,12 +20,10 @@ public:
     maxforce = ofRandom(0.01, 0.1);
     size = ofRandom(4, 10);
 
-    vertices.push_back(ofPoint(0, -size));
-    vertices.push_back(ofPoint(-size, size));
-    vertices.push_back(ofPoint(size, size));
-
-    line.addVertices(vertices);
-    line.close();
+    path.moveTo(ofPoint(0, -size));
+    path.lineTo(ofPoint(-size, size));
+    path.lineTo(ofPoint(size, size));
+    path.close();
   }
 
   void update() {
@@ -64,7 +61,7 @@ public:
     ofRotate((theta), 0, 0, 1);
     ofTranslate(-size / 2, -size / 2);
 
-    line.draw();
+    path.draw();
 
     ofPopMatrix();
   }

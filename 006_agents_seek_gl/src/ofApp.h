@@ -1,12 +1,14 @@
 #pragma once
 
 #include "ofMain.h"
+#include "target.h"
 #include "vehicle.h"
 
 class ofApp : public ofBaseApp {
 
 public:
 
+  Target* target;
   vector<Vehicle*> vehicles;
   int numVehicles;
 

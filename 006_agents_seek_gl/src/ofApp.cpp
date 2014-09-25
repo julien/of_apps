@@ -3,7 +3,9 @@
 void ofApp::setup() {
   ofBackground(0);
 
-  numVehicles = 100;
+  target = new Target(ofGetWidth() / 2, ofGetHeight() / 2);
+
+  numVehicles = 400;
   for (int i = 0; i < numVehicles; ++i) {
     vehicles.push_back(new Vehicle(ofGetWidth() / 2, ofGetHeight() / 2));
   }
@@ -11,10 +13,11 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
-  ofVec2f mouse = ofVec2f(mouseX, mouseY);
+  target->update();
+  ofVec2f position = target->position();
 
   for (int i = 0; i < numVehicles; ++i) {
-    vehicles.at(i)->seek(mouse);
+    vehicles.at(i)->seek(position);
     vehicles.at(i)->update();
   }
 }
