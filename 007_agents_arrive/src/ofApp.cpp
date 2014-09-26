@@ -19,20 +19,28 @@ void ofApp::setup() {
 }
 
 void ofApp::update() {
-
   ofVec2f position;
 
-  for (int i = 0; i < maxEntities; ++i) {
-    targets.at(i)->update();
-    position = targets.at(i)->position();
-    vehicles.at(i)->arrive(position);
-    vehicles.at(i)->update();
+  for (int i = 0; i < vehicles.size(); ++i) {
+    Target* t = targets.at(i);
+    t->update();
+    position = t->position();
+
+    Vehicle* v = vehicles.at(i);
+    if (v && v->alive()) {
+      v->arrive(position);
+      v->update();
+
+      if (!v->alive()) {
+        vehicles.erase(vehicles.begin() + i);
+        vehicles.push_back(new Vehicle(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
+      }
+    }
   }
 }
 
 void ofApp::draw() {
-  for (int i = 0; i < maxEntities; ++i) {
-    // targets.at(i)->debugDraw();
+  for (int i = 0; i < vehicles.size(); ++i) {
     vehicles.at(i)->draw();
   }
 }
