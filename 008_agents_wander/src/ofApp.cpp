@@ -1,26 +1,17 @@
 #include "ofApp.h"
 
-
 void ofApp::setup() {
   ofBackground(0);
-
   maxEntities = 50;
 
   for (int i = 0; i < maxEntities; ++i) {
-
     targets.push_back(new Target(ofRandom(ofGetWidth()), ofRandom(ofGetHeight())));
-
-    vehicles.push_back(new Vehicle(
-      ofGetWidth() / 2,
-      ofGetHeight() / 2
-    ));
-
+    vehicles.push_back(new Vehicle(ofGetWidth() / 2, ofGetHeight() / 2));
   }
 }
 
 void ofApp::update() {
   ofVec2f position;
-
   for (int i = 0; i < vehicles.size(); ++i) {
     Target* t = targets.at(i);
     t->update();
@@ -29,6 +20,7 @@ void ofApp::update() {
     Vehicle* v = vehicles.at(i);
     if (v && v->alive()) {
       v->arrive(position);
+      v->boundaries();
       v->update();
 
       if (!v->alive()) {
