@@ -1,7 +1,7 @@
 .DS_Store
 *.xcodeproj
 *.project
-
+.xcodeproj/project.pbxproj
 .plist
 .xconfig
 bin
