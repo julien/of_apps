@@ -9,9 +9,9 @@ void Params::setup() {
   lifeTime = 1.0;
 
   rotate = 90;
-  force = 1000;
-  spinning = 1500;
-  friction = 0.5;
+  force = 100;
+  spinning = 250;
+  friction = 0.3;
 }
 
 ofPoint randomPointInCircle(float maxRad) {

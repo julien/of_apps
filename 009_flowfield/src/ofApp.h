@@ -1,8 +1,13 @@
 #pragma once
 
 #include "ofMain.h"
+#include "flowfield.h"
+#include "vehicle.h"
 
 class ofApp : public ofBaseApp {
+  FlowField flowfield;
+  vector<Vehicle*> vehicles;
+  int maxEntities;
 
 public:
   void setup();
