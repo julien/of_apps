@@ -2,18 +2,20 @@
 
 
 void ofApp::setup(){
+
   ofSetFrameRate(60);
   ofBackground(0);
 
+  spring = 0.03;
   factor = 1;
-  numMovers = 40;
+  numMovers = 200;
   maxMovers = 500;
 
   for (int i = 0; i < numMovers; ++i) {
     movers.push_back(
       new Mover(ofRandom(ofGetWidth()),
                 ofRandom(ofGetHeight()),
-                ofRandom(1.0, 10.0)));
+                ofRandom(1.0, 20.0)));
   }
 }
 
@@ -21,13 +23,34 @@ void ofApp::checkCollision(Mover *a, Mover *b) {
   float dx = b->location.x - a->location.x;
   float dy = b->location.y - a->location.y;
   float dist = sqrt(dx * dx + dy * dy);
+  float min_dist = a->radius + b->radius;
 
-  if (dist < a->radius + b->radius) {
-    ofLog() << "handle collision";
+  if (dist < min_dist) {
 
     float angle = atan2(dy, dx);
-  }
+    float tx = a->location.x + cos(angle) * min_dist;
+    float ty = a->location.y + sin(angle) * min_dist;
+    float ax = (tx - b->location.x) * spring * 0.5;
+    float ay = (ty - b->location.y) * spring * 0.5;
 
+    a->velocity.x -= ax;
+    a->velocity.y -= ay;
+
+    b->velocity.x += ax;
+    b->velocity.y += ay;
+
+    //ofNoFill();
+
+    ofSetColor(255, 255, 255, 255);
+
+    ofBeginShape();
+
+      ofVertex(a->location.x, a->location.y);
+      ofVertex(b->location.x, b->location.y);
+
+    ofEndShape();
+
+  }
 }
 
 void ofApp::update() {
@@ -50,16 +73,15 @@ void ofApp::update() {
     Mover *mA = movers.at(i);
     for (j = 1; j < numMovers; ++j) {
       Mover *mB = movers.at(j);
-      // checkCollision(mA, mB);
       checkCollision(mA, mB);
     }
   }
 }
 
 void ofApp::draw() {
-//   for (int i = 0; i < numMovers; ++i) {
-//     movers.at(i)->display();
-//   }
+  for (int i = 0; i < numMovers; ++i) {
+    movers.at(i)->display();
+  }
 }
 
 void ofApp::mousePressed(int x, int y, int button) {

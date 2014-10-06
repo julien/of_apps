@@ -6,6 +6,7 @@
 class ofApp : public ofBaseApp {
 
 public:
+  double spring;
   vector<Mover*> movers;
   int numMovers;
   int maxMovers;
