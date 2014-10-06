@@ -1,44 +1,21 @@
 #pragma once
 
 #include "ofMain.h"
-
-class Particle {
-public:
-  Particle();
-  void setup();
-  void update(float dt);
-  void draw();
-
-  ofPoint pos;
-  ofPoint vel;
-  float time;
-  float lifeTime;
-  bool live;
-};
-
-class Params {
-public:
-  void setup();
-  ofPoint eCenter;
-  float eRad;
-  float velRad;
-  float lifeTime;
-  float rotate;
-};
-
-extern Params param;
+#include "mover.h"
 
 class ofApp : public ofBaseApp {
 
 public:
+  vector<Mover*> movers;
+  int numMovers;
+  int maxMovers;
+  int factor;
+
+  void checkCollision(Mover *a, Mover *b);
+
   void setup();
   void update();
   void draw();
-
-  Particle p;
-  ofFbo fbo;
-  float history;
-  float time0;
 
   void keyPressed(int key);
   void keyReleased(int key);

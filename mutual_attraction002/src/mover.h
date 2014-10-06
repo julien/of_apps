@@ -18,5 +18,6 @@ public:
   void update();
   void display();
   void checkEdges();
+
   ofVec2f attract(Mover* m);
 };

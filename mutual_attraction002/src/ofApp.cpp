@@ -1,11 +1,12 @@
 #include "ofApp.h"
 
+
 void ofApp::setup(){
   ofSetFrameRate(60);
   ofBackground(0);
 
   factor = 1;
-  numMovers = 20;
+  numMovers = 40;
   maxMovers = 500;
 
   for (int i = 0; i < numMovers; ++i) {
@@ -16,9 +17,25 @@ void ofApp::setup(){
   }
 }
 
+void ofApp::checkCollision(Mover *a, Mover *b) {
+  float dx = b->location.x - a->location.x;
+  float dy = b->location.y - a->location.y;
+  float dist = sqrt(dx * dx + dy * dy);
+
+  if (dist < a->radius + b->radius) {
+    ofLog() << "handle collision";
+
+    float angle = atan2(dy, dx);
+  }
+
+}
+
 void ofApp::update() {
-  for (int i = 0; i < numMovers; ++i) {
-    for (int j = 0; j < numMovers; ++j) {
+  int i;
+  int j;
+  // TODO: optimize this shit
+  for (i = 0; i < numMovers; ++i) {
+    for (j = 0; j < numMovers; ++j) {
       if (i != j) {
         ofVec2f force = movers.at(j)->attract(movers.at(i));
         force *= factor;
@@ -28,12 +45,21 @@ void ofApp::update() {
     movers.at(i)->update();
     movers.at(i)->checkEdges();
   }
+
+  for (i = 0; i < numMovers - 1; ++i) {
+    Mover *mA = movers.at(i);
+    for (j = 1; j < numMovers; ++j) {
+      Mover *mB = movers.at(j);
+      // checkCollision(mA, mB);
+      checkCollision(mA, mB);
+    }
+  }
 }
 
 void ofApp::draw() {
-  for (int i = 0; i < numMovers; ++i) {
-    movers.at(i)->display();
-  }
+//   for (int i = 0; i < numMovers; ++i) {
+//     movers.at(i)->display();
+//   }
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
