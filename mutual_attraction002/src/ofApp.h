@@ -11,7 +11,9 @@ public:
   int numMovers;
   int maxMovers;
   int factor;
+  float startTime;
 
+  void addMovers(int num);
   void checkCollision(Mover *a, Mover *b);
 
   void setup();

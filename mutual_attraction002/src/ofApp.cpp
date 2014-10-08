@@ -1,21 +1,12 @@
 #include "ofApp.h"
 
+void ofApp::addMovers(int num) {
 
-void ofApp::setup(){
-
-  ofSetFrameRate(60);
-  ofBackground(0);
-
-  spring = 0.03;
-  factor = 1;
-  numMovers = 200;
-  maxMovers = 500;
-
-  for (int i = 0; i < numMovers; ++i) {
+  for (int i = 0; i < num; ++i) {
     movers.push_back(
       new Mover(ofRandom(ofGetWidth()),
                 ofRandom(ofGetHeight()),
-                ofRandom(1.0, 20.0)));
+                ofRandom(1.0, 6.0)));
   }
 }
 
@@ -39,62 +30,80 @@ void ofApp::checkCollision(Mover *a, Mover *b) {
     b->velocity.x += ax;
     b->velocity.y += ay;
 
-    //ofNoFill();
-
-    ofSetColor(255, 255, 255, 255);
-
-    ofBeginShape();
-
-      ofVertex(a->location.x, a->location.y);
-      ofVertex(b->location.x, b->location.y);
-
-    ofEndShape();
-
+    ofLine(a->location.x, a->location.y, b->location.x, b->location.y);
   }
+}
+
+
+void ofApp::setup(){
+
+  ofSetFrameRate(60);
+  ofBackground(0);
+
+  spring = 0.03;
+  factor = 1;
+  numMovers = 300;
+  maxMovers = 500;
+  startTime = ofGetElapsedTimef();
+
+  addMovers(numMovers);
 }
 
 void ofApp::update() {
   int i;
   int j;
-  // TODO: optimize this shit
-  for (i = 0; i < numMovers; ++i) {
-    for (j = 0; j < numMovers; ++j) {
-      if (i != j) {
-        ofVec2f force = movers.at(j)->attract(movers.at(i));
-        force *= factor;
-        movers.at(i)->applyForce(force);
+  int l = movers.size();
+
+  for (i = 0; i < l; ++i) {
+    Mover *a = movers.at(i);
+    if (a && a->alive()) {
+      a->update();
+      a->checkEdges();
+
+      if (!a->alive()) {
+        movers.erase(movers.begin() + i);
+
+        addMovers(1);
       }
     }
-    movers.at(i)->update();
-    movers.at(i)->checkEdges();
   }
 
-  for (i = 0; i < numMovers - 1; ++i) {
-    Mover *mA = movers.at(i);
-    for (j = 1; j < numMovers; ++j) {
-      Mover *mB = movers.at(j);
-      checkCollision(mA, mB);
+  l = movers.size();
+  for (i = 0; i < l - 1; ++i) {
+    Mover *a = movers.at(i);
+
+    for (j = 1; j < l; ++j) {
+      Mover *b = movers.at(j);
+
+      ofVec2f force = b->attract(a);
+      force *= factor;
+      a->applyForce(force);
+      checkCollision(a, b);
     }
   }
+
+  // float now = ofGetElapsedTimef();
+  // if (now - startTime > 2) {
+
+  //   addMovers(ofRandom(1, 5));
+  // }
+
 }
 
 void ofApp::draw() {
-  for (int i = 0; i < numMovers; ++i) {
+  int l = movers.size();
+  for (int i = 0; i < l; ++i) {
     movers.at(i)->display();
   }
 }
 
 void ofApp::mousePressed(int x, int y, int button) {
-  numMovers = movers.size();
-
-  if (numMovers < maxMovers) {
-
-    movers.push_back(
-      new Mover(mouseX,
-                mouseY,
-                ofRandom(1.0, 10.0)));
-    ++numMovers;
-  }
+  // int l = ofRandom(10, numMovers);
+  // for (int i = 0; i < l; ++i) {
+  //   movers.push_back(new Mover(ofRandom(ofGetWidth()),
+  //         ofRandom(ofGetHeight()),
+  //         ofRandom(1.0, 6.0)));
+  // }
 }
 
 void ofApp::keyPressed(int key) {}
